@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+<div class="container" style="margin-top: 30px">
+  <figure class="text-center">
+    <blockquote class="blockquote">
+      <p> "{{ name_of_quote }}" </p>
+    </blockquote>
+    <figcaption class="blockquote-footer">
+      {{ type_of_source }}: "{{ name_of_source }}" {{ author_of_source }}
+    </figcaption>
+  </figure>
+</div>
+
+{% endblock %}
