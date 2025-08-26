@@ -1,25 +1,28 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-# переменная request хранит в себе все данные запроса 
-# httpresponse возвращает все данные ответа 
+from quote_main.models import Quotes
+
+
 def index(request):
+
+    # получаю случайную цитату
+    quote = Quotes.objects.select_related('source').order_by('?').first()
 
     context: dict[str, str] = {
         'title': 'Цитатник',
-        'name_of_quote': 'Это великая цитата великого философа, которая навсегда останется в наших умах',
-        'count_of_views': 2,
-        'type_of_source': 'Книга',
-        'name_of_source': 'Государство',
-        'author_of_source': 'Платон'
+        'quote': quote
     }
 
     return render(request, 'main/index.html', context)
 
 def top_ten(request):
 
+    quotes = Quotes.objects.all()
+
     context: dict[str, str] = {
         'title': 'Топ 10 цитат',
+        'quotes': quotes
     }
 
     return render(request, 'main/top_ten.html', context)
