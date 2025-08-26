@@ -3,41 +3,48 @@ from django.db import models
 class QuoteSources(models.Model):
     """ Модель источника цитаты - название, тип, автор """
 
-    # типы источников
     TYPE_CHOICE = [
         ('film', 'Фильм'),
         ('book', 'Книга'),
-        ('song', 'Песня')
+        ('song', 'Песня'),
+        ('serial', 'Сериал')
     ]
-    # название источника
-    name = models.CharField(max_length=100)
-    # тип источника
-    type = models.CharField(max_length=20, 
-                            choices=TYPE_CHOICE)
-    # автор источника
-    author = models.CharField(max_length=100)
+
+    name = models.CharField(max_length=100, unique=True, verbose_name='Название')
+    type = models.CharField(max_length=20, choices=TYPE_CHOICE)
+    author = models.CharField(max_length=100, verbose_name='Автор', blank=True)
 
     class Meta:
         db_table = 'sources'
+        verbose_name = 'Источник'
+        verbose_name_plural = 'Источники'
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.author})"
 
 
 class Quotes(models.Model):
     """ Модель цитаты - цитата, вес, лайки, дизлайки, просмотры, источник(внеш.кл.)"""
 
-    # WEIGHT_CHOICE = (1, 2, 3, 4, 5)
+    WEIGHT_CHOICE = [
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    ]
 
-    quote = models.TextField(unique=True)
-    weight = models.IntegerField()
-    likes = models.IntegerField()
-    dislikes = models.IntegerField()
-    views = models.IntegerField()
-    source = models.ForeignKey(QuoteSources, on_delete=models.CASCADE)
+    quote = models.TextField(unique=True, verbose_name='Цитата')
+    weight = models.IntegerField(choices=WEIGHT_CHOICE, verbose_name='Вес', default=3)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
+    source = models.ForeignKey(QuoteSources, on_delete=models.CASCADE, verbose_name='Источник')
 
     class Meta:
         db_table = 'quotes'
+        verbose_name = 'Цитату'
+        verbose_name_plural = 'Цитаты'
 
     def __str__(self):
         return self.quote
