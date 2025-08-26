@@ -16,4 +16,4 @@ def index(request):
     return render(request, 'main/index.html', context)
 
 def top_ten(request):
-    return HttpResponse('top_ten')
+    return render(request, 'main/top_ten.html')
