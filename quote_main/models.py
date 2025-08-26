@@ -4,11 +4,11 @@ class QuoteSources(models.Model):
     """ Модель источника цитаты - название, тип, автор """
 
     # типы источников
-    TYPE_CHOICE = (
+    TYPE_CHOICE = [
         ('film', 'Фильм'),
         ('book', 'Книга'),
         ('song', 'Песня')
-    )
+    ]
     # название источника
     name = models.CharField(max_length=100)
     # тип источника
@@ -34,10 +34,11 @@ class Quotes(models.Model):
     likes = models.IntegerField()
     dislikes = models.IntegerField()
     views = models.IntegerField()
-    # source = models.ForeignKey(to='QuoteSources', on_delete= verbose_name='Источник')
+    source = models.ForeignKey(QuoteSources, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'quotes'
 
-
+    def __str__(self):
+        return self.quote
 
