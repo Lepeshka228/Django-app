@@ -27,14 +27,14 @@ class QuoteSources(models.Model):
 class Quotes(models.Model):
     """ Модель цитаты - цитата, вес, лайки, дизлайки, просмотры, источник(внеш.кл.)"""
 
-    WEIGHT_CHOICE = (1, 2, 3, 4, 5)
+    # WEIGHT_CHOICE = (1, 2, 3, 4, 5)
 
     quote = models.TextField(unique=True)
-    weight = models.IntegerField(choices=WEIGHT_CHOICE)
+    weight = models.IntegerField()
     likes = models.IntegerField()
     dislikes = models.IntegerField()
     views = models.IntegerField()
-    source = models.ForeignKey(to='QuoteSources', verbose_name='Источник')
+    # source = models.ForeignKey(to='QuoteSources', on_delete= verbose_name='Источник')
 
     class Meta:
         db_table = 'quotes'
