@@ -9,13 +9,13 @@
     </blockquote>
     <figcaption class="blockquote-footer">
       {{ type_of_source }}: "{{ name_of_source }}" {{ author_of_source }}
+      <div class="text-end" role="group">
+        <button type="button" class="btn">Нравится</button>
+        <button type="button" class="btn">Не нравится</button>
+      </div>
+      <p class="text-end">Просмотров: {{ count_of_views }}</p>
     </figcaption>
   </figure>
-
-  <div class="btn-group" role="group">
-    <button type="button" class="btn">Нравится</button>
-    <button type="button" class="btn">Не нравится</button>
-  </div>
 
 </div>
 
