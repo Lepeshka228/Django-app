@@ -9,9 +9,8 @@ class QuoteSources(models.Model):
         ('song', 'Песня'),
         ('serial', 'Сериал')
     ]
-
-    name = models.CharField(max_length=100, unique=True, verbose_name='Название')
-    type = models.CharField(max_length=20, choices=TYPE_CHOICE)
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICE, verbose_name='Тип')
     author = models.CharField(max_length=100, verbose_name='Автор', blank=True)
 
     class Meta:
@@ -33,7 +32,6 @@ class Quotes(models.Model):
         (4, 4),
         (5, 5)
     ]
-
     quote = models.TextField(unique=True, verbose_name='Цитата')
     weight = models.IntegerField(choices=WEIGHT_CHOICE, verbose_name='Вес', default=3)
     likes = models.IntegerField(default=0)

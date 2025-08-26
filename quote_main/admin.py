@@ -5,12 +5,11 @@ from quote_main.models import Quotes, QuoteSources
 # admin.site.register(Quotes)
 # admin.site.register(QuoteSources)
 
-class SourcesInline(admin.StackedInline):
-    model = QuoteSources
-    extra = 2    # кол-во пустых форм для добавления
-
-
 @admin.register(Quotes)
 class QuotesAdmin(admin.ModelAdmin):
-    fields = ['quote', 'weight', 'source', 'author']
-    inlines = [SourcesInline]
+    list_display = ['quote', 'weight', 'source']
+    fields = ['quote', 'weight', 'source']
+
+@admin.register(QuoteSources)
+class QuoteSourcesAdmin(admin.ModelAdmin):
+    list_display = ['name', 'type', 'author']

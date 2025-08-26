@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'quote_main'
+    'quote_main',
+    # 'django-admin-plus'    # для reverse inline в админке
 ]
 
 MIDDLEWARE = [
