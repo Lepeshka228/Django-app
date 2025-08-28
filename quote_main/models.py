@@ -14,7 +14,7 @@ class Quote(models.Model):
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
-    name = models.CharField(max_length=100, verbose_name='Название источника', unique=True)
+    name = models.CharField(max_length=100, verbose_name='Название источника')
     TYPE_CHOICE = [
         ('film', 'Фильм'),
         ('book', 'Книга'),
@@ -27,3 +27,6 @@ class Quote(models.Model):
     
     def __str__(self):
         return f'{self.quote[:20]} - {self.author}'
+    
+    def clean(self):
+        pass

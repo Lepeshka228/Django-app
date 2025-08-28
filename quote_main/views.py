@@ -1,11 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.db import transaction
-from django.forms import formset_factory
 
-from quote_main.models import Quotes, QuoteSources
+from quote_main.models import Quote
 
-from quote_main.forms import QuotesForm, SourceFormSet
+from quote_main.forms import QuoteForm
 
 import random
 
@@ -17,18 +15,14 @@ def index(request):
     Так-же возможность добавлять свою цитату
     """
 
-    random_quote = random_quote_func(Quotes)
+    random_quote = random_quote_func(Quote)
 
-    quote_form = QuotesForm
-    quote_source = QuoteSources
-    inline_form = SourceFormSet
+    form = QuoteForm
 
     context: dict[str, str] = {
         'title': 'Цитатник',
         'quote': random_quote,
-        'quote_form': quote_form,
-        'quote_source': quote_source,
-        'form': inline_form
+        'form': form
     }
 
     return render(request, 'main/index.html', context)
@@ -36,7 +30,7 @@ def index(request):
 
 def top_ten(request):
     """ Вьюшка страницы с топ-10 цитат - сортировка по лайкам, дизлайкам, просмотрам """
-    quotes = Quotes.objects.all()
+    quotes = Quote.objects.all()
 
     context: dict[str, str] = {
         'title': 'Топ 10 цитат',

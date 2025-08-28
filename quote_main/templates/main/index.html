@@ -14,7 +14,7 @@
       <p> "{{ quote.quote }}" </p>
     </blockquote>
     <figcaption class="blockquote-footer">
-      {{ quote.source.get_type_display }}: "{{ quote.source.name }}", {{ quote.source.author }}
+      {{ quote.get_type_display }}: "{{ quote.name }}", {{ quote.author }}
       <div class="text-end" role="group">
         <button type="button" class="btn">{{ quote.likes }} Нравится</button>
         <button type="button" class="btn">{{ quote.dislikes }} Не нравится</button>
@@ -40,31 +40,6 @@
 
             {% csrf_token %}
             {{ form.as_p }}
-
-            <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#addSource">              
-              (Если источника нет - придётся сначала его создать)
-            </button>
-
-            <div class="modal fade" id="addSource" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Добавьте источник</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form action="{% url 'quote_main:index' %}" method="post">
-                      <label for="exampleInputEmail1" class="form-label">Новый источник</label>
-          
-                      {% csrf_token %}
-                      {{ quote_source.as_p }}
-
-                      <button type="submit" class="btn btn-primary">Добавить</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <button type="submit" class="btn btn-primary">Добавить</button>
           </form>

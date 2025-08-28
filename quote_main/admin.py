@@ -1,15 +1,11 @@
 from django.contrib import admin
 
-from quote_main.models import Quotes, QuoteSources
+from quote_main.models import Quote
 
 # admin.site.register(Quotes)
 # admin.site.register(QuoteSources)
 
-@admin.register(Quotes)
+@admin.register(Quote)
 class QuotesAdmin(admin.ModelAdmin):
-    list_display = ['quote', 'weight', 'source']
-    fields = ['quote', 'weight', 'source']
-
-@admin.register(QuoteSources)
-class QuoteSourcesAdmin(admin.ModelAdmin):
-    list_display = ['name', 'type', 'author']
+    list_display = ['quote', 'weight', 'name', 'type', 'author']
+    fields = ['quote', 'weight', 'name', 'type', 'author']
