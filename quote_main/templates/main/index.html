@@ -4,7 +4,10 @@
 
 <div class="container" style="margin-top: 30px">
 
-  <h1 class="display-6">Случайная цитата</h1>
+  <h1 class="display-6">
+    Случайная цитата
+  </h1>
+  <small class="text-muted">Обновите страницу чтобы увидеть новую</small>
 
   <figure class="text-center bg-light rounded p-3">
     <blockquote class="blockquote">
@@ -19,6 +22,57 @@
       <p class="text-end px-3">Просмотров: {{ quote.views }}</p>
     </figcaption>
   </figure>
+
+  <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#addQuote">
+    Добавить свою цитату
+  </button>
+
+  <div class="modal fade" id="addQuote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Добавьте цитату</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'quote_main:index' %}" method="post">
+            <label for="exampleInputEmail1" class="form-label">Добавьте цитату</label>
+
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#addSource">              
+              (Если источника нет - придётся сначала его создать)
+            </button>
+
+            <div class="modal fade" id="addSource" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Добавьте источник</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'quote_main:index' %}" method="post">
+                      <label for="exampleInputEmail1" class="form-label">Новый источник</label>
+          
+                      {% csrf_token %}
+                      {{ quote_source.as_p }}
+
+                      <button type="submit" class="btn btn-primary">Добавить</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Добавить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </div>
 
