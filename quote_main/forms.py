@@ -8,4 +8,4 @@ class QuoteForm(forms.ModelForm):
     """ Форма для заполнения табл quotes """
     class Meta:
         model = Quote
-        fields = ['quote', 'weight', 'name', 'type', 'author']
+        fields = ['quote', 'weight', 'source', 'type', 'author']

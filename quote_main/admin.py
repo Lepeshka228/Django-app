@@ -7,5 +7,5 @@ from quote_main.models import Quote
 
 @admin.register(Quote)
 class QuotesAdmin(admin.ModelAdmin):
-    list_display = ['quote', 'weight', 'name', 'type', 'author']
-    fields = ['quote', 'weight', 'name', 'type', 'author']
+    list_display = ['quote', 'weight', 'source', 'type', 'author']
+    fields = ['quote', 'weight', 'source', 'type', 'author']

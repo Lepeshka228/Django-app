@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -6,7 +7,7 @@ class Quote(models.Model):
 
     class Meta:
         db_table = 'quotes'
-        verbose_name = 'Цитату'
+        verbose_name = 'Цитата'
         verbose_name_plural = 'Цитаты'
 
     quote = models.TextField(unique=True, verbose_name='Цитата')
@@ -14,7 +15,7 @@ class Quote(models.Model):
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
-    name = models.CharField(max_length=100, verbose_name='Название источника')
+    source = models.CharField(max_length=100, verbose_name='Название источника')
     TYPE_CHOICE = [
         ('film', 'Фильм'),
         ('book', 'Книга'),
@@ -26,7 +27,18 @@ class Quote(models.Model):
     author = models.CharField(max_length=100, verbose_name='Автор', blank=True)
     
     def __str__(self):
-        return f'{self.quote[:20]} - {self.author}'
+        return f'{self.quote[:20]} - {self.source}, {self.author}'
     
     def clean(self):
-        pass
+        # уберём лишние пробелы сначала и конца
+        if self.quote:
+            self.quote = self.quote.strip()
+        if self.source:
+            self.source = self.source.strip()
+        # проверка <= 3
+        cur_source_list_of_quotes = Quote.objects.filter(source=self.source)    # вернет все элементы с данным источником
+        # исключаем текущую, т.к. она ещё не сохранена
+        if self.pk:
+            cur_source_list_of_quotes = cur_source_list_of_quotes.exclude(pk=self.pk)
+        if cur_source_list_of_quotes.count() >= 3:
+            raise ValidationError({'source': 'У этого источника уже есть 3 цитаты. Придётся выбрать другой'})
