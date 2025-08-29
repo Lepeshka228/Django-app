@@ -35,10 +35,15 @@ class Quote(models.Model):
             self.quote = self.quote.strip()
         if self.source:
             self.source = self.source.strip()
-        # проверка <= 3
-        cur_source_list_of_quotes = Quote.objects.filter(source=self.source)    # вернет все элементы с данным источником
-        # исключаем текущую, т.к. она ещё не сохранена
+
+        list_of_quote_obj = Quote.objects.filter(quote__iexact=self.quote)  # вернет все элементы с данной цитатой
+        list_of_source_obj = Quote.objects.filter(source__iexact=self.source)    # вернет все элементы с данным источником
+
         if self.pk:
-            cur_source_list_of_quotes = cur_source_list_of_quotes.exclude(pk=self.pk)
-        if cur_source_list_of_quotes.count() >= 3:
+            list_of_quote_obj = list_of_quote_obj.exclude(pk=self.pk)
+            list_of_source_obj = list_of_source_obj.exclude(pk=self.pk)
+
+        if list_of_quote_obj.exists():
+            raise ValidationError({'quote': 'Такая цитата уже существует.' })
+        if list_of_source_obj.count() >= 3:
             raise ValidationError({'source': 'У этого источника уже есть 3 цитаты. Придётся выбрать другой'})

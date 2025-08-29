@@ -36,7 +36,6 @@
         </div>
         <div class="modal-body">
           <form action="{% url 'quote_main:index' %}" method="post">
-            <label for="exampleInputEmail1" class="form-label">Добавьте цитату</label>
 
             {% csrf_token %}
             {{ form.as_p }}
