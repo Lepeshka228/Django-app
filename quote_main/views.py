@@ -15,29 +15,26 @@ def index(request):
     Вьюшка главной страницы, здесь выводим случайную цитату(взвешенную)
     Так-же возможность добавлять свою цитату
     """
-    
     if request.method == 'POST':
         form = QuoteForm(request.POST)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.full_clean()
-            obj.save()
+            form.save()
             messages.success(request, 'Цитата добавлена!')
-            return redirect('main/index.html')
+            return redirect('quote_main:index')
         else:
             messages.error(request, 'Исправьте ошибки в форме.')
     else:
         form = QuoteForm()
 
-        random_quote = random_quote_func(Quote)
+    random_quote = random_quote_func(Quote)
 
-        context = {
-            'title': 'Цитатник',
-            'quote': random_quote,
-            'form': form
-        }
+    context = {
+        'title': 'Цитатник',
+        'quote': random_quote,
+        'form': form
+    }
 
-        return render(request, 'main/index.html', context)
+    return render(request, 'main/index.html', context)
 
 
 def top_ten(request):
