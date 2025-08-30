@@ -32,9 +32,9 @@ class Quote(models.Model):
     def clean(self):
         # уберём лишние пробелы сначала и конца
         if self.quote:
-            self.quote = self.quote.strip()
+            self.quote = self.quote.strip().lower()
         if self.source:
-            self.source = self.source.strip()
+            self.source = self.source.strip().lower()
 
         list_of_quote_obj = Quote.objects.filter(quote__iexact=self.quote)  # вернет все элементы с данной цитатой
         list_of_source_obj = Quote.objects.filter(source__iexact=self.source)    # вернет все элементы с данным источником

@@ -81,6 +81,14 @@
 
 
 <script>
+
+  {% if form.errors %}
+    document.addEventListener("DOMContentLoaded", function() {
+      var myModal = new bootstrap.Modal(document.getElementById('addQuoteModal'));
+      myModal.show();
+    });
+  {% endif %}
+
   document.addEventListener('DOMContentLoaded', function() {
       const voteButtons = document.querySelectorAll('button[data-quote-id]');
 
