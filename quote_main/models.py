@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Quote(models.Model):
-    """ Модель единственной и главной таблицы - содержит и цитаты и источник в одном """
+    """ Модель главной таблицы - содержит и цитаты и источник в одном """
 
     class Meta:
         db_table = 'quotes'
@@ -49,6 +49,7 @@ class Quote(models.Model):
             raise ValidationError({'source': 'У этого источника уже есть 3 цитаты. Придётся выбрать другой'})
 
 class LikeDislike(models.Model):
+    """ Модель отслеживания лайк/дизлайк для каждого пользователя(ip) """
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
     client_ip = models.CharField(max_length=100)
     TYPE_CHOICE = [
@@ -63,3 +64,15 @@ class LikeDislike(models.Model):
     def __str__(self):
         return f'{self.client_ip} проголосовал в {self.quote}'
 
+
+class ViewedQuote(models.Model):
+    """ Модель отслеживания просмотров цитат для каждого пользователя. """
+    quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
+    client_ip = models.CharField(max_length=100)
+    
+    class Meta:
+        unique_together = ('quote', 'client_ip')
+        db_table = 'viewed_quotes'
+    
+    def __str__(self):
+        return f'Просмотр цитаты {self.quote.id} от {self.client_ip}'

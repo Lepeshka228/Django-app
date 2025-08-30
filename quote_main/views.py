@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 
-from quote_main.models import Quote, LikeDislike
+from quote_main.models import Quote, LikeDislike, ViewedQuote
 
 from quote_main.forms import QuoteForm
 
@@ -30,6 +30,17 @@ def index(request):
 
     # получаем случайную цитату
     random_quote = random_quote_func(Quote)
+
+    if random_quote:
+        client_ip = get_client_ip(request)
+
+        # Проверяем, была ли эта цитата уже просмотрена этим IP-адресом
+        view, created = ViewedQuote.objects.get_or_create(quote=random_quote, client_ip=client_ip)
+        
+        # Если это новый просмотр (запись создана), увеличиваем счетчик
+        if created:
+            random_quote.views += 1
+            random_quote.save(update_fields=['views'])
 
     context = {
         'title': 'Цитатник',
