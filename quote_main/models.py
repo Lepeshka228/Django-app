@@ -47,3 +47,19 @@ class Quote(models.Model):
             raise ValidationError({'quote': 'Такая цитата уже существует.' })
         if list_of_source_obj.count() >= 3:
             raise ValidationError({'source': 'У этого источника уже есть 3 цитаты. Придётся выбрать другой'})
+
+class LikeDislike(models.Model):
+    quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
+    client_ip = models.CharField(max_length=100)
+    TYPE_CHOICE = [
+        ('like', 'like'),
+        ('dislike', 'dislike'),
+        ('none', 'none')
+    ]
+    vote_type = models.CharField(max_length=10, choices=TYPE_CHOICE)
+    class Meta:
+        unique_together = ('quote', 'client_ip')
+        db_table = 'likes_dislikes'
+    def __str__(self):
+        return f'{self.client_ip} проголосовал в {self.quote}'
+

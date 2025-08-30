@@ -26,8 +26,8 @@
     <figcaption class="blockquote-footer">
       {{ quote.get_type_display }}: "{{ quote.source }}", {{ quote.author }}
       <div class="text-end" role="group">
-        <button id="like-btn" type="button" class="btn"><span id="likes-count" >{{ quote.likes }}</span> Нравится</button>
-        <button id="dislike-btn" type="button" class="btn"><span id="dislikes-count">{{ quote.dislikes }}</span> Не нравится</button>
+        <button data-quote-id="{{ quote.id }}" data-vote-type="like" class="btn"><span id="likes-{{ quote.id }}" >{{ quote.likes }}</span> Нравится</button>
+        <button data-quote-id="{{ quote.id }}" data-vote-type="dislike" class="btn"><span id="dislikes-{{ quote.id }}">{{ quote.dislikes }}</span> Не нравится</button>
       </div>
       <p class="text-end px-3">Просмотров: {{ quote.views }}</p>
     </figcaption>
@@ -78,5 +78,47 @@
   </div>
 
 </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const voteButtons = document.querySelectorAll('button[data-quote-id]');
+
+      voteButtons.forEach(button => {
+          button.addEventListener('click', function() {
+              const quoteId = this.getAttribute('data-quote-id');
+              const voteType = this.getAttribute('data-vote-type');
+              const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+              fetch('{% url "quote_main:like_dislike_proc" %}', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'X-CSRFToken': csrfToken
+                  },
+                  body: new URLSearchParams({
+                      'quote_id': quoteId,
+                      'vote_type': voteType
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.status === 'success') {
+                      // Если голос зафиксирован, обновляем счетчики на странице
+                      const likesSpan = document.getElementById(`likes-${quoteId}`);
+                      const dislikesSpan = document.getElementById(`dislikes-${quoteId}`);
+
+                      likesSpan.textContent = data.likes;
+                      dislikesSpan.textContent = data.dislikes;
+
+                  } else {
+                      alert(data.message); // Показываем сообщение об ошибке
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+          });
+      });
+  });
+</script>
 
 {% endblock %}
