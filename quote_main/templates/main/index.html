@@ -4,11 +4,11 @@
 
 <!-- Сообщения -->
 {% if messages %}
-{% for message in messages %}
-  <div class="alert alert-info" role="alert">
-    {{ message }}
-  </div>
-{% endfor %}
+  {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
 {% endif %}
 
 <div class="container" style="margin-top: 30px">
@@ -26,8 +26,8 @@
     <figcaption class="blockquote-footer">
       {{ quote.get_type_display }}: "{{ quote.source }}", {{ quote.author }}
       <div class="text-end" role="group">
-        <button type="button" class="btn">{{ quote.likes }} Нравится</button>
-        <button type="button" class="btn">{{ quote.dislikes }} Не нравится</button>
+        <button id="like-btn" type="button" class="btn"><span id="likes-count" >{{ quote.likes }}</span> Нравится</button>
+        <button id="dislike-btn" type="button" class="btn"><span id="dislikes-count">{{ quote.dislikes }}</span> Не нравится</button>
       </div>
       <p class="text-end px-3">Просмотров: {{ quote.views }}</p>
     </figcaption>
@@ -78,16 +78,5 @@
   </div>
 
 </div>
-
-<!-- Скриптец для автомат открытия модалки при ошибке -->
-{% if form.errors %}
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var myModal = new bootstrap.Modal(document.getElementById('addQuoteModal'));
-    myModal.show();
-  });
-</script>
-{% endif %}
-
 
 {% endblock %}
