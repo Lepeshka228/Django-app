@@ -61,26 +61,45 @@ def like_dislike_proc(request):
     client_ip = get_client_ip(request)
 
     try:
-        vote, created = LikeDislike.objects.get_or_create(
-            quote=quote,
-            client_ip=client_ip,
-            defaults={'vote_type': vote_type}
-        )
-        if created:
+        vote = LikeDislike.objects.filter(quote=quote, client_ip=client_ip).first()
+        if vote:
+            # Пользователь уже голосовал
+            if vote.vote_type == vote_type:
+                # Если тип голоса совпадает, отменяем голос
+                if vote_type == 'like':
+                    quote.likes -= 1
+                elif vote_type == 'dislike':
+                    quote.dislikes -= 1
+                vote.delete()
+                message = 'Голос отменен.'
+
+            else:
+                # Если тип голоса не совпадает, изменяем голос
+                if vote_type == 'like':
+                    quote.likes += 1
+                    quote.dislikes -= 1
+                elif vote_type == 'dislike':
+                    quote.dislikes += 1
+                    quote.likes -= 1
+                vote.vote_type = vote_type
+                vote.save()
+                message = 'Голос изменен.'
+
+        else:
             if vote_type == 'like':
                 quote.likes += 1
             elif vote_type == 'dislike':
                 quote.dislikes += 1
-            quote.save()
+            LikeDislike.objects.create(quote=quote, client_ip=client_ip, vote_type=vote_type)
+            message = 'Голос зафиксирован.'
             
-            # Возвращаем обновленные счетчики
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Голос зафиксирован.',
-                'likes': quote.likes,
-                'dislikes': quote.dislikes
-            })
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Пользователь уже голосовал.'})
+        quote.save()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Голос зафиксирован.',
+            'likes': quote.likes,
+            'dislikes': quote.dislikes
+        })
+
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': 'Ошибка.'})
+        return JsonResponse({'status': 'error', 'message': f'Ошибка: {str(e)}'})
